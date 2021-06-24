@@ -1,0 +1,2 @@
+class CurrencyLayerException < StandardError
+end

@@ -1,24 +1,21 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
-
-Things you may want to cover:
-
 * Ruby version
+- This project uses Ruby 2.7.3
 
 * System dependencies
-
-* Configuration
+- Please ensure PostgreSQL is installed on your system.  PostgreSQL 13 was used for development.
 
 * Database creation
-
-* Database initialization
+- Use the following command to create the database:
+  bundle exec db:create db:schema:load
 
 * How to run the test suite
+- To run the entire test suite:
+  bundle exec rspec
 
-* Services (job queues, cache servers, search engines, etc.)
+* How to start the server in the development environment
+  bundle exec rails s
 
-* Deployment instructions
-
-* ...
+* Other notes
+- The price of a product is specified in cents so it can be stored as an integer in order to avoid cumulative rounding errors.

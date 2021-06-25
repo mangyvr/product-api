@@ -1,4 +1,4 @@
-class FetchCurrencyLayerRates < FetchRates
+class CurrencyLayerRatesFetcher < RatesFetcher
   def initialize
     get_quotes_from_currency_layer
   end
@@ -23,9 +23,7 @@ class FetchCurrencyLayerRates < FetchRates
                            currencies: 'CAD,EUR,GBP',
                            source: 'USD'})
 
-    byebug
-
-    raise CurrencyLayerException "Unable to fetch rates from Currency Layer." if response.status != 200
+    raise CurrencyLayerException.new("Unable to fetch rates from Currency Layer.") if response.status != 200
 
     @quotes = JSON.parse(response.body)['quotes']
   end

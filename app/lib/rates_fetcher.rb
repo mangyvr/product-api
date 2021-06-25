@@ -1,4 +1,4 @@
-class FetchRates
+class RatesFetcher
   def usd_to_cad_rate
     raise "Unimplemented"
   end

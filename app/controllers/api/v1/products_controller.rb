@@ -1,11 +1,19 @@
 class Api::V1::ProductsController < ApplicationController
   def show
     begin
-      product = ShowProduct.new.call(id: params[:id])
+      rates_fetcher = CurrencyLayerRatesFetcher.new
+      converter = CurrencyConverter.new(rates_fetcher: rates_fetcher)
+      currency = params[:currency] || 'usd'
+      
+      product = ShowProduct.new(currency_converter: converter).call(id: params[:id], currency: currency)
 
       render json: product, status: :ok
     rescue ActiveRecord::RecordNotFound => e
       head :not_found
+    rescue CurrencyLayerException => e
+      render json: {message: e}, status: :bad_gateway
+    rescue UnsupportedCurrencyException => e
+      render json: {message: e}, status: :bad_request
     end
   end
 
@@ -26,8 +34,8 @@ class Api::V1::ProductsController < ApplicationController
       end
 
       product = CreateProduct.new.call(price: params[:price], 
-                                            name: params[:name], 
-                                            description: params[:description])
+                                       name: params[:name], 
+                                       description: params[:description])
 
       head :created, location: api_v1_product_url(product)
     rescue ActiveRecord::RecordInvalid => e
@@ -41,8 +49,19 @@ class Api::V1::ProductsController < ApplicationController
       return render json: {message: 'Limit must be positive'}, status: :bad_request
     end
 
-    products = MostViewedProducts.new.call(limit: params[:limit])
+    begin
+      rates_fetcher = CurrencyLayerRatesFetcher.new
+      converter = CurrencyConverter.new(rates_fetcher: rates_fetcher)
+      currency = params[:currency] || 'usd'
+      limit = params[:limit] || 5
 
-    render json: products, status: :ok
+      products = MostViewedProducts.new(currency_converter: converter).call(limit: limit, currency: currency)
+
+      render json: products, status: :ok
+    rescue CurrencyLayerException => e
+      render json: {message: e}, status: :bad_gateway
+    rescue UnsupportedCurrencyException => e
+      render json: {message: e}, status: :bad_request
+    end
   end
 end

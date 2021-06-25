@@ -19,3 +19,4 @@
 
 * Other notes
 - The price of a product is specified in cents so it can be stored as an integer in order to avoid cumulative rounding errors.
+- To use the app, a currency layer API key is required.  It should be specified as CURRENCYLAYER_API_KEY in a .env file in the root directory of the app.

@@ -9,7 +9,7 @@
 ## Database creation
 - Use the following command to create the database:
 ```
-  bundle exec db:create db:schema:load
+  bundle exec rails db:create db:schema:load
 ```
 
 ## How to run the test suite

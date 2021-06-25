@@ -39,13 +39,13 @@ class Api::V1::ProductsController < ApplicationController
 
       head :created, location: api_v1_product_url(product)
     rescue ActiveRecord::RecordInvalid => e
-      render json: {message: e}
+      render json: {message: e}, status: :bad_request
     end
   
   end
 
   def most_viewed
-    if params[:limit] && params[:limit] < 0
+    if params[:limit] && params[:limit].to_i < 0
       return render json: {message: 'Limit must be positive'}, status: :bad_request
     end
 

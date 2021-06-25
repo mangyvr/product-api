@@ -131,6 +131,7 @@ RSpec.describe "Api::V1::Products", type: :request do
     let!(:product1) { create(:product, view_count: 5, price: 100)}
     let!(:product2) { create(:product, view_count: 4, price: 200)}
     let!(:product3) { create(:product, view_count: 3, price: 300)}
+    let!(:product4) { create(:product, view_count: 0, price: 400)}
     let(:quotes) { JSON.parse(success_body)['quotes'] }
 
     before(:each) do |test|
@@ -150,7 +151,7 @@ RSpec.describe "Api::V1::Products", type: :request do
       expect(parsed_response.third['price']).to eq((product3.price * exchange_rate).to_i)
     end
 
-    it 'returns products in order by view count' do
+    it 'returns products in order by view count, and does not display products with 0 views' do
       get '/api/v1/products/most_viewed'
 
       parsed_response = JSON.parse(response.body)
@@ -159,6 +160,7 @@ RSpec.describe "Api::V1::Products", type: :request do
       expect(parsed_response.first['id']).to eq(product1.id)
       expect(parsed_response.second['id']).to eq(product2.id)
       expect(parsed_response.third['id']).to eq(product3.id)
+      expect(parsed_response.length).to eq(3)
     end
 
     it 'respects limit' do

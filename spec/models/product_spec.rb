@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Product, type: :model do
-  describe('validations') do
+  context 'validations' do
     it 'should require presence of name' do
       product = build(:product, name: '')
 
